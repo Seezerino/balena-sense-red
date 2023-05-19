@@ -21,6 +21,10 @@ data:
   applicationEnvironmentVariables:
     - COLLAPSE_FIELDS: 1
     - RAW_VALUES: 0
+    - PORT: 80
+    - USERNAME: balena
+    - PASSWORD: balena
+    - ENCRIPTION_KEY: balena
   defaultDeviceType: raspberrypi3
   supportedDeviceTypes:
     - raspberry-pi

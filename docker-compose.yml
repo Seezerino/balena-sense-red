@@ -2,19 +2,42 @@ version: '2'
 volumes:
     sense-data:
     dashboard-data:
+    resin-data:
 services:
+
   influxdb:
     restart: always
     image: arm32v7/influxdb@sha256:2fed9b09a672cab330ac3ea1f03616e6821f2235bda64d549f605ef0d7081911
     volumes:
       - 'sense-data:/var/lib/influxdb'
+  node-red:
+    build: ./node-red
+    volumes:
+      - 'resin-data:/data'
+    restart: always
+    privileged: true
+    network_mode: host
+    labels:
+      io.balena.features.supervisor-api: '1'
+    environment:
+      - "USERNAME=balena"
+      - "PASSWORD=balena"
+      - "ENCRIPTION_KEY=balena"
+    cap_add:
+      - SYS_RAWIO
+    devices:
+      - "/dev/mem:/dev/mem"
+      - "/dev/gpiomem:/dev/gpiomem"
+      - "/dev/i2c-1:/dev/i2c-1"
+    ports:
+      - 80:80
   dashboard:
     image: bh.cr/balenalabs/dashboard
     restart: always
     volumes:
         - 'dashboard-data:/data'
     ports:
-        - '80'
+        - '100'
   sensor:
     build: .
     privileged: true
@@ -40,3 +63,4 @@ services:
     ports:
       - "1883:1883"
     restart: always  
+
